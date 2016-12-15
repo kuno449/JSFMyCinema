@@ -1,0 +1,25 @@
+body{
+
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 85%;
+}
+
+.bold{
+	font-weight: bold;
+}
+
+.biggerText{
+	font-size: 125%;
+}
+
+
+h1{
+    font-size: 120%;
+    font-family: Century Gothic;
+}
+
+.copyright{
+	font-size: 60&;
+}

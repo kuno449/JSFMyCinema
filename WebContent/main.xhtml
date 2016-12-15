@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>JSFMyCinema</title>
+	<h:outputStylesheet library="css" name="format.css" />
+</h:head>
+
+<h:body>
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" styleClass="units" size="80" closable="true" collapsible="true">
+			<h:graphicImage value="../resources/img/banner.png" style="height:65px; width:1250px; " />
+		</p:layoutUnit>
+
+		<p:layoutUnit position="south" styleClass="units" size="30"	closable="true" collapsible="true">
+			<style type="text/css">.copyright {vertical-align: middle; horizontal-align: middle; }</style>
+			<h:outputText styleClass="copyright" value="Copyright © 2015 Yoshiki Kuno" />
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center" size="480" resizable="true"	closable="true" collapsible="true">
+
+			<p:tabView dynamic="true" cache="true">
+				<p:tab title="MyCinema" icon="fa fa-video-camera">
+					<h:form>
+						<p:dataGrid id="favList" var="movie"
+							value="#{myCinemaBean.favouriteList}" columns="8" rows="8"
+							paginator="true" paginatorPosition="top"
+							binding="#{serviceBean.datagrid1}"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+							<f:facet name="header">
+								<h1>Favourite List</h1>
+							</f:facet>
+							<style type="text/css">.ui-datagrid {border: none;}</style>
+							<p:panel styleClass="ui-datagrid">
+								<h:panelGrid columns="1">
+									<h:commandLink action="#{serviceBean.showFavouriteDetail}">
+										<p:graphicImage width="70" url="#{movie.posterPath}" />
+										<f:param name="movieId" value="#{movie.mediaId}" />
+									</h:commandLink>
+									<h:outputText value="#{movie.title}" />
+								</h:panelGrid>
+							</p:panel>
+						</p:dataGrid>
+						<h:commandButton update="favList" value="update" />
+						<br />
+
+						<p:dataGrid id="toWList" var="movie" value="#{myCinemaBean.toWatchList}"
+							columns="8" rows="8" paginator="true" paginatorPosition="top" binding="#{serviceBean.datagrid2}"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+							<f:facet name="header">
+								<h1>ToWatch List</h1>
+							</f:facet>
+							<style type="text/css">.ui-datagrid {border: none;}</style>
+							<p:panel styleClass="ui-datagrid">
+								<h:panelGrid columns="1">
+									<h:commandLink action="#{serviceBean.showToWatchDetail}">
+										<p:graphicImage width="70" url="#{movie.posterPath}" />
+										<f:param name="movieId" value="#{movie.mediaId}" />
+									</h:commandLink>
+									<h:outputText value="#{movie.title}" />
+								</h:panelGrid>
+							</p:panel>
+						</p:dataGrid>
+						<h:commandButton update="toWList" value="update" />
+						<br/>
+						<p:dataGrid var="movie" value="#{myCinemaBean.keepEyeOnList}"
+							columns="8" rows="8" paginator="true" paginatorPosition="top"
+							binding="#{serviceBean.datagrid3}"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+							<f:facet name="header">
+								<h1>KeepAnEyeOn List</h1>
+							</f:facet>
+							<style type="text/css">.ui-datagrid {border: none;}</style>
+							<p:panel id="KEOList" styleClass="ui-datagrid">
+								<h:panelGrid columns="1">
+									<h:commandLink action="#{serviceBean.showKeepEyeOnDetail}">
+										<p:graphicImage width="70" url="#{movie.posterPath}" />
+										<f:param name="movieId" value="#{movie.mediaId}" />
+									</h:commandLink>
+									<h:outputText value="#{movie.title}" />
+								</h:panelGrid>
+							</p:panel>
+						</p:dataGrid>
+						<h:commandButton update="KEOList" value="update" />
+					</h:form>
+				</p:tab>
+
+
+				<p:tab title="Search" icon="fa fa-search">
+					<h:form>
+						<p:outputLabel styleClass="bold" value="Keyword: " />
+						<p:inputText value="#{serviceBean.keyword}" />
+						<p:commandButton action="#{serviceBean.searchByKey}" update="movieListTable"  value="Key Search" />
+							<br/><br/>
+						<p:outputLabel styleClass="bold" for="release" value="Release: " />
+						<p:selectOneButton styleClass="biggerText" id="release">
+							<f:selectItem styleClass="biggerText" itemLabel="~1970" itemValue="horizontal" />
+							<f:selectItem styleClass="biggerText" itemLabel="70s" itemValue="vertical" />
+							<f:selectItem styleClass="biggerText" itemLabel="80s" itemValue="vertical" />
+							<f:selectItem styleClass="biggerText" itemLabel="90s" itemValue="horizontal" />
+							<f:selectItem styleClass="biggerText" itemLabel="2000~" itemValue="horizontal" />
+						</p:selectOneButton>
+							<br/><br/>
+						<p:outputLabel styleClass="bold" for="genre" value="Genre: " />
+						<p:selectOneRadio id="genre" value="#{serviceBean.currentGenre}"
+							layout="grid" columns="6">
+							<f:selectItem itemLabel="Action" itemValue="28" />
+							<f:selectItem itemLabel="Adventure" itemValue="12" />
+							<f:selectItem itemLabel="Animation" itemValue="16" />
+							<f:selectItem itemLabel="Comedy" itemValue="35" />
+							<f:selectItem itemLabel="Documentary" itemValue="99" />
+							<f:selectItem itemLabel="Drama" itemValue="18" />
+							<f:selectItem itemLabel="Family" itemValue="10751" />
+							<f:selectItem itemLabel="Fantasy" itemValue="14" />
+							<f:selectItem itemLabel="Foreign" itemValue="10769" />
+							<f:selectItem itemLabel="History" itemValue="36" />
+							<f:selectItem itemLabel="Horror" itemValue="27" />
+							<f:selectItem itemLabel="Music" itemValue="10402" />
+							<f:selectItem itemLabel="Mystery" itemValue="9648" />
+							<f:selectItem itemLabel="Science Fiction" itemValue="878" />
+							<f:selectItem itemLabel="TV Movie" itemValue="10770" />
+							<f:selectItem itemLabel="Thriller" itemValue="53" />
+						</p:selectOneRadio>
+							<br/>							
+						<p:commandButton action="#{serviceBean.showMovieList}" update="movieListTable" value="Search" />
+												
+						<p:ajaxStatus>
+							<f:facet name="start">
+								<p:graphicImage library="img" style="width:200;" name="loading_spinner.gif" />
+							</f:facet>
+						</p:ajaxStatus>
+
+						<p:dataTable id="movieListTable" var="movie" value="#{serviceBean.movieList}" selectionMode="single"
+							selection="#{serviceBean.selectedMovie}" rowKey="#{movie.mediaId}"  >
+							<p:ajax event="rowSelect" listener="#{serviceBean.onRowSelect}"	update="movieDetail" />
+							<p:column>
+								<h:outputText value="#{movie.title}" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="east" size="340" resizable="true" closable="true" collapsible="true" effect="drop">
+			<p:panelGrid id="movieDetail" columns="1">
+				
+				<p:commandLink update="buttonPanel" >
+					<h:graphicImage width="200"	url="#{serviceBean.selectedMovie.posterPath}" />
+				</p:commandLink>
+				<h:panelGroup>
+					<h:outputText styleClass="bold" value="Movie ID " />
+					<h:outputLabel value="#{serviceBean.selectedMovie.mediaId}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputText styleClass="bold" value="Title " />
+					<h:outputText value="#{serviceBean.selectedMovie.title}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputText styleClass="bold" value="Genre " />
+					<h:outputText value="#{serviceBean.selectedMovie.genres}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputText styleClass="bold" value="Release Date " />
+					<h:outputText value="#{serviceBean.selectedMovie.releaseDate}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputText styleClass="bold" value="Original Language " />
+					<h:outputText
+						value="#{serviceBean.selectedMovie.originalLanguage}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputText styleClass="bold" value="Overview " />
+					<h:outputText value="#{serviceBean.selectedMovie.overview}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputText styleClass="bold" value="User Rating " />
+					<h:outputText value="#{serviceBean.selectedMovie.userRating}" />
+				</h:panelGroup>
+			</p:panelGrid>
+			
+			<br/>
+			<h:panelGroup id="buttonPanel" >
+				<p:commandButton rendered="#{serviceBean.delFavButton}" actionListener="#{myCinemaBean.delFavourite}" value="delete from the List" />
+				<p:commandButton rendered="#{serviceBean.delToWButton}" actionListener="#{myCinemaBean.delToWatch}" value="delete from the List" />
+				<p:commandButton rendered="#{serviceBean.delKEOButton}" actionListener="#{myCinemaBean.delKeepEyeOn}" value="delete from the List" />
+				<p:commandButton rendered="#{serviceBean.addFavButton}" actionListener="#{myCinemaBean.addFavourite}" value="to Favourite List" /><br/>
+				<p:commandButton rendered="#{serviceBean.addToWButton}" actionListener="#{myCinemaBean.addToWatch}" value="to ToWatch List" /><br/>
+				<p:commandButton rendered="#{serviceBean.addKEOButton}" actionListener="#{myCinemaBean.addKeepEyeOn}" value="to KeepAnEyeOn List" />
+			</h:panelGroup>
+		</p:layoutUnit>
+	</p:layout>
+</h:body>
+
+</html>
